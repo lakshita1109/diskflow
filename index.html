@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DISKFLOW — Disk Scheduling & I/O Performance Simulator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <!-- Modular CSS Architecture -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/simulator.css">
+  <link rel="stylesheet" href="css/views.css">
+</head>
+<body class="theme-burgundy-ivory">
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="3"></circle>
+              <line x1="12" y1="2" x2="12" y2="4"></line>
+              <line x1="12" y1="20" x2="12" y2="22"></line>
+              <line x1="2" y1="12" x2="4" y2="12"></line>
+              <line x1="20" y1="12" x2="22" y2="12"></line>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1 class="brand-title">DISKFLOW</h1>
+            <span class="brand-subtitle">I/O PERFORMANCE LAB</span>
+          </div>
+        </div>
+        <button class="sidebar-toggle-btn" id="sidebarCloseBtn" aria-label="Close sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">MAIN NAVIGATION</div>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#overview" class="nav-link active" data-view="overview">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              </span>
+              <span class="nav-label">Overview</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#simulator" class="nav-link" data-view="simulator">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+              </span>
+              <span class="nav-label">Disk Simulator</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#comparison" class="nav-link" data-view="comparison">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+              </span>
+              <span class="nav-label">Algorithm Comparison</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#workload" class="nav-link" data-view="workload">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              </span>
+              <span class="nav-label">Workload Manager</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#analytics" class="nav-link" data-view="analytics">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+              </span>
+              <span class="nav-label">Performance Analytics</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#about" class="nav-link" data-view="about">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              </span>
+              <span class="nav-label">About Project</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">Educational Mode</div>
+          <p class="sidebar-card-text">Step-by-step reasoning & track distance breakdowns.</p>
+          <label class="toggle-switch">
+            <input type="checkbox" id="eduModeToggle" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label" id="eduModeLabel">Active</span>
+          </label>
+        </div>
+        <div class="system-meta">
+          <span>OS SIMULATION v2.4</span>
+          <span>EST. TIME MODEL: 5ms/track</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTAINER -->
+    <div class="main-wrapper">
+      <!-- TOP HEADER -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <div>
+            <h2 class="header-title" id="pageTitle">Overview Dashboard</h2>
+            <p class="header-desc" id="pageDescription">Monitor real-time disk head scheduling metrics, performance snapshot, and system activity.</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <div class="status-badge status-ready" id="simStatusBadge">
+            <span class="status-dot"></span>
+            <span class="status-text" id="simStatusText">Ready</span>
+          </div>
+
+          <button class="btn btn-secondary" id="globalResetBtn" title="Reset current simulation state">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+            <span>Reset</span>
+          </button>
+
+          <button class="btn btn-primary" id="globalStartBtn" title="Start or Resume head movement">
+            <svg class="play-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <svg class="pause-icon hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+            <span id="globalStartText">Start Simulation</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- CONTENT VIEWS CONTAINER -->
+      <main class="content-body" id="contentBody">
+        
+        <!-- ============================================== -->
+        <!-- VIEW 1: OVERVIEW DASHBOARD                     -->
+        <!-- ============================================== -->
+        <section class="view-section active" id="view-overview">
+          <!-- METRIC CARDS ROW -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-title">Total Disk Requests</span>
+                <span class="metric-icon icon-terracotta">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                </span>
+              </div>
+              <div class="metric-value" id="metricTotalRequests">8</div>
+              <div class="metric-footer">
+                <span class="metric-tag tag-neutral" id="metricQueueSummary">Tracks: 0 – 199</span>
+              </div>
+            </div>
+
+            <div class="metric-card highlight-card">
+              <div class="metric-header">
+                <span class="metric-title">Total Head Movement</span>
+                <span class="metric-icon icon-burgundy">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                </span>
+              </div>
+              <div class="metric-value text-burgundy" id="metricTotalMovement">236 <span class="metric-unit">tracks</span></div>
+              <div class="metric-footer">
+                <span class="metric-tag tag-wine" id="metricMovementTag">&Sigma; |track<sub>i</sub> - track<sub>i-1</sub>|</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-title">Average Seek Distance</span>
+                <span class="metric-icon icon-wine">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line></svg>
+                </span>
+              </div>
+              <div class="metric-value" id="metricAvgSeek">29.5 <span class="metric-unit">tr/req</span></div>
+              <div class="metric-footer">
+                <span class="metric-tag tag-neutral">Mean tracks per I/O</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-title">Estimated Seek Time</span>
+                <span class="metric-icon icon-terracotta">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                </span>
+              </div>
+              <div class="metric-value" id="metricSeekTime">1,180 <span class="metric-unit">ms</span></div>
+              <div class="metric-footer">
+                <span class="metric-tag tag-neutral" id="metricSeekTimeFormula">5 ms &times; 236 tracks</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-title">Throughput</span>
+                <span class="metric-icon icon-sage">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                </span>
+              </div>
+              <div class="metric-value text-sage" id="metricThroughput">6.78 <span class="metric-unit">req/sec</span></div>
+              <div class="metric-footer">
+                <span class="metric-tag tag-sage">Simulated Service Rate</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-header">
+                <span class="metric-title">Requests Completed</span>
+                <span class="metric-icon icon-sage">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </span>
+              </div>
+              <div class="metric-value" id="metricCompleted">0 / 8</div>
+              <div class="metric-footer">
+                <div class="progress-bar-container">
+                  <div class="progress-bar-fill" id="metricProgressBar" style="width: 0%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- OVERVIEW MAIN GRID -->
+          <div class="grid-2col">
+            <!-- CURRENT SIMULATION SUMMARY -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3 class="card-title">Current Simulation Configuration</h3>
+                  <span class="card-subtitle">Active parameters applied to the virtual disk drive</span>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="navigateTo('simulator')">Configure in Simulator &rarr;</button>
+              </div>
+              <div class="card-body">
+                <div class="summary-list">
+                  <div class="summary-item">
+                    <span class="summary-key">Scheduling Algorithm</span>
+                    <span class="summary-val badge badge-burgundy" id="sumAlgorithm">SCAN (Elevator)</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="summary-key">Initial Head Position</span>
+                    <span class="summary-val font-mono" id="sumInitialHead">Track 53</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="summary-key">Disk Boundary & Tracks</span>
+                    <span class="summary-val font-mono" id="sumDiskSize">200 Tracks (0 – 199)</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="summary-key">Initial Arm Direction</span>
+                    <span class="summary-val badge badge-terracotta" id="sumDirection">&larr; Left (Decreasing)</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="summary-key">Unit Seek Rate</span>
+                    <span class="summary-val font-mono" id="sumSeekRate">5.0 ms / track</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="summary-key">Raw Request Sequence</span>
+                    <span class="summary-val font-mono summary-queue-text" id="sumRawQueue">98, 183, 37, 122, 14, 124, 65, 67</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PERFORMANCE SNAPSHOT CHART -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3 class="card-title">Quick Algorithm Performance Snapshot</h3>
+                  <span class="card-subtitle">Total seek distance comparison on current workload</span>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="navigateTo('comparison')">Full Comparison &rarr;</button>
+              </div>
+              <div class="card-body">
+                <div class="chart-wrapper-compact">
+                  <canvas id="overviewSnapshotChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ALGORITHM OVERVIEW 6-CARDS ROW -->
+          <div class="section-block">
+            <div class="section-title-wrap">
+              <h3 class="section-title">Operating System Disk Scheduling Algorithms</h3>
+              <p class="section-subtitle">Six fundamental I/O head positioning strategies implemented in modern OS kernels</p>
+            </div>
+            <div class="algo-cards-grid">
+              <!-- FCFS -->
+              <div class="algo-card" onclick="selectAlgoAndSimulate('FCFS')">
+                <div class="algo-card-badge">FCFS</div>
+                <h4 class="algo-name">First Come First Serve</h4>
+                <p class="algo-desc">Services I/O requests strictly in chronological arrival order. Completely fair, eliminates starvation, but results in severe arm thrashing on scattered workloads.</p>
+                <div class="algo-metric">
+                  <span>Simulated Seek:</span>
+                  <strong id="cardSeek-FCFS">—</strong>
+                </div>
+              </div>
+              <!-- SSTF -->
+              <div class="algo-card" onclick="selectAlgoAndSimulate('SSTF')">
+                <div class="algo-card-badge">SSTF</div>
+                <h4 class="algo-name">Shortest Seek Time First</h4>
+                <p class="algo-desc">Selects pending request closest to current head position. Dramatically reduces overall head movement, but causes starvation for distant cylinder requests.</p>
+                <div class="algo-metric">
+                  <span>Simulated Seek:</span>
+                  <strong id="cardSeek-SSTF">—</strong>
+                </div>
+              </div>
+              <!-- SCAN -->
+              <div class="algo-card" onclick="selectAlgoAndSimulate('SCAN')">
+                <div class="algo-card-badge">SCAN</div>
+                <h4 class="algo-name">SCAN (Elevator)</h4>
+                <p class="algo-desc">Moves in one direction servicing requests until hitting the boundary cylinder, then reverses. Prevents starvation and provides bounded wait times.</p>
+                <div class="algo-metric">
+                  <span>Simulated Seek:</span>
+                  <strong id="cardSeek-SCAN">—</strong>
+                </div>
+              </div>
+              <!-- C-SCAN -->
+              <div class="algo-card" onclick="selectAlgoAndSimulate('C-SCAN')">
+                <div class="algo-card-badge">C-SCAN</div>
+                <h4 class="algo-name">Circular SCAN</h4>
+                <p class="algo-desc">Moves in one direction to the end boundary, then immediately returns to the opposite boundary without serving on return. Provides uniform wait time distribution.</p>
+                <div class="algo-metric">
+                  <span>Simulated Seek:</span>
+                  <strong id="cardSeek-C-SCAN">—</strong>
+                </div>
+              </div>
+              <!-- LOOK -->
+              <div class="algo-card" onclick="selectAlgoAndSimulate('LOOK')">
+                <div class="algo-card-badge">LOOK</div>
+                <h4 class="algo-name">LOOK Scheduling</h4>
+                <p class="algo-desc">Elevator variant that inspects pending requests ahead: reverses immediately at the furthest request in current direction without traveling to extreme disk edges.</p>
+                <div class="algo-metric">
+                  <span>Simulated Seek:</span>
+                  <strong id="cardSeek-LOOK">—</strong>
+                </div>
+              </div>
+              <!-- C-LOOK -->
+              <div class="algo-card" onclick="selectAlgoAndSimulate('C-LOOK')">
+                <div class="algo-card-badge">C-LOOK</div>
+                <h4 class="algo-name">Circular LOOK</h4>
+                <p class="algo-desc">Restricts circular sweep only between lowest and highest requested tracks. Skips vacant boundary cylinders during turnaround, optimizing seek latency.</p>
+                <div class="algo-metric">
+                  <span>Simulated Seek:</span>
+                  <strong id="cardSeek-C-LOOK">—</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RECENT ACTIVITY LOG -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3 class="card-title">Recent Execution Activity</h3>
+                <span class="card-subtitle">Chronological log of head movements in current simulation</span>
+              </div>
+              <span class="badge badge-sage" id="overviewActivityCount">0 events</span>
+            </div>
+            <div class="card-body">
+              <div class="activity-timeline" id="overviewActivityLog">
+                <div class="timeline-empty">Simulation initialized. Press <strong>Start Simulation</strong> to observe head movements.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 2: DISK SIMULATOR (CORE)                  -->
+        <!-- ============================================== -->
+        <section class="view-section" id="view-simulator">
+          <!-- CONFIGURATION & CONTROLS TOOLBAR -->
+          <div class="simulator-layout">
+            <!-- LEFT COLUMN: INPUT CONTROLS -->
+            <div class="sim-sidebar-panel">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Simulation Parameters</h3>
+                  <button class="btn-text" id="resetDefaultsBtn" title="Reset to textbook defaults">Defaults</button>
+                </div>
+                <div class="card-body form-compact">
+                  
+                  <!-- ALGORITHM SELECT -->
+                  <div class="form-group">
+                    <label for="algoSelect" class="form-label">Scheduling Algorithm</label>
+                    <div class="select-wrapper">
+                      <select id="algoSelect" class="form-select">
+                        <option value="FCFS" selected>FCFS (First Come First Serve)</option>
+                        <option value="SSTF">SSTF (Shortest Seek Time First)</option>
+                        <option value="SCAN">SCAN (Elevator Algorithm)</option>
+                        <option value="C-SCAN">C-SCAN (Circular SCAN)</option>
+                        <option value="LOOK">LOOK (Optimized Elevator)</option>
+                        <option value="C-LOOK">C-LOOK (Circular LOOK)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- INITIAL HEAD POSITION -->
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="initialHeadInput" class="form-label">Initial Head</label>
+                      <input type="number" id="initialHeadInput" class="form-input" min="0" max="999" value="53">
+                    </div>
+                    <div class="form-group">
+                      <label for="diskSizeInput" class="form-label">Total Tracks</label>
+                      <input type="number" id="diskSizeInput" class="form-input" min="10" max="1000" value="200">
+                    </div>
+                  </div>
+
+                  <!-- DIRECTION & SEEK RATE -->
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="directionSelect" class="form-label">Initial Direction</label>
+                      <select id="directionSelect" class="form-select">
+                        <option value="Left" selected>&larr; Left (Decreasing / Toward 0)</option>
+                        <option value="Right">&rarr; Right (Increasing / Toward End)</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="seekTimeRateInput" class="form-label">Seek Time/Track</label>
+                      <div class="input-with-suffix">
+                        <input type="number" id="seekTimeRateInput" class="form-input" min="0.1" max="100" step="0.5" value="5">
+                        <span class="input-suffix">ms</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- REQUEST QUEUE INPUT -->
+                  <div class="form-group">
+                    <div class="label-with-action">
+                      <label for="queueInput" class="form-label">Request Queue (Cylinders)</label>
+                      <span class="helper-count" id="queueCountBadge">8 requests</span>
+                    </div>
+                    <textarea id="queueInput" class="form-textarea" rows="3" placeholder="e.g. 98, 183, 37, 122, 14, 124, 65, 67">98, 183, 37, 122, 14, 124, 65, 67</textarea>
+                    <div class="form-hint" id="queueValidationMsg">Valid tracks: 0 to 199. Comma or space separated.</div>
+                  </div>
+
+                  <!-- PRESETS & QUICK GENERATORS -->
+                  <div class="form-group">
+                    <label class="form-label">Workload Presets</label>
+                    <div class="preset-pill-group">
+                      <button type="button" class="preset-pill" data-preset="textbook" title="Silberschatz OS Textbook Default">Standard (Silberschatz)</button>
+                      <button type="button" class="preset-pill" data-preset="random" title="Uniform random tracks across disk">Random</button>
+                      <button type="button" class="preset-pill" data-preset="sequential" title="Consecutive track access">Sequential</button>
+                      <button type="button" class="preset-pill" data-preset="clustered" title="Dual-locality clusters">Clustered</button>
+                      <button type="button" class="preset-pill" data-preset="heavy" title="Dense 20-request queue">Heavy Load</button>
+                    </div>
+                  </div>
+
+                  <!-- BUTTON ACTIONS -->
+                  <div class="action-btn-row">
+                    <button type="button" class="btn btn-outline btn-sm" id="clearQueueBtn">Clear</button>
+                    <button type="button" class="btn btn-secondary btn-sm" id="randomQueueBtn">Randomize</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="applyConfigBtn">Apply & Replan</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- EDUCATIONAL REASONING BOX -->
+              <div class="card edu-reasoning-card" id="eduReasoningBox">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <span class="badge badge-terracotta">Educational Mode</span>
+                    <h4 class="card-title" style="margin-top: 4px;">Head Decision Rationale</h4>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="edu-step-header" id="eduStepHeader">Step 0: Ready to execute</div>
+                  <p class="edu-step-explanation" id="eduStepExplanation">
+                    The disk arm is parked at cylinder <strong>53</strong>. Select an algorithm and press Play or Step to inspect how the head navigates requested tracks.
+                  </p>
+                  <div class="edu-partitions">
+                    <div class="edu-partition-col">
+                      <span class="partition-label">&larr; Left of Head (<span id="eduLeftCount">0</span>)</span>
+                      <div class="partition-tags" id="eduLeftTags">—</div>
+                    </div>
+                    <div class="edu-partition-col">
+                      <span class="partition-label">Right of Head &rarr; (<span id="eduRightCount">0</span>)</span>
+                      <div class="partition-tags" id="eduRightTags">—</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT COLUMN: VISUALIZER, ANIMATION, & TRACE TABLE -->
+            <div class="sim-main-panel">
+              
+              <!-- VISUALIZER CARD -->
+              <div class="card visualizer-card">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <h3 class="card-title">Interactive Disk Track Visualizer</h3>
+                    <span class="card-subtitle">Real-time simulation of mechanical arm traverse across platter cylinders</span>
+                  </div>
+                  
+                  <!-- SPEED CONTROL -->
+                  <div class="sim-speed-controls">
+                    <span class="speed-label">Speed:</span>
+                    <div class="speed-btn-group">
+                      <button class="speed-btn" data-speed="0.5">0.5&times;</button>
+                      <button class="speed-btn active" data-speed="1">1&times;</button>
+                      <button class="speed-btn" data-speed="2">2&times;</button>
+                      <button class="speed-btn" data-speed="4">4&times;</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-body">
+                  <!-- PLAYBACK CONTROLS BAR -->
+                  <div class="playback-bar">
+                    <div class="playback-controls">
+                      <button class="ctrl-btn" id="simRestartBtn" title="Restart to Step 0">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 19 2 12 11 5 11 19"></polygon><polygon points="22 19 13 12 22 5 22 19"></polygon></svg>
+                        <span>Restart</span>
+                      </button>
+                      <button class="ctrl-btn" id="simStepBackBtn" title="Step Backward">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg>
+                        <span>Step Back</span>
+                      </button>
+                      <button class="ctrl-btn ctrl-btn-primary" id="simPlayPauseBtn" title="Play / Pause">
+                        <svg class="play-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                        <svg class="pause-svg hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                        <span id="playPauseText">Play</span>
+                      </button>
+                      <button class="ctrl-btn" id="simStepForwardBtn" title="Step Forward">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+                        <span>Step Next</span>
+                      </button>
+                    </div>
+
+                    <div class="sim-indicators">
+                      <div class="indicator-item">
+                        <span class="ind-label">Current Head:</span>
+                        <span class="ind-val text-terracotta font-mono font-bold" id="liveHeadPosition">53</span>
+                      </div>
+                      <div class="indicator-item">
+                        <span class="ind-label">Direction:</span>
+                        <span class="ind-val badge badge-neutral" id="liveDirectionBadge">&larr; Left</span>
+                      </div>
+                      <div class="indicator-item">
+                        <span class="ind-label">Seek Accumulated:</span>
+                        <span class="ind-val font-mono font-bold text-burgundy" id="liveAccumulatedSeek">0 tracks</span>
+                      </div>
+                      <div class="indicator-item">
+                        <span class="ind-label">Progress:</span>
+                        <span class="ind-val font-mono font-bold" id="liveProgressStep">0 / 8</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 1D HORIZONTAL TRACK RULER & HEAD CARRIAGE -->
+                  <div class="disk-track-container" id="diskTrackContainer">
+                    <div class="disk-track-legend">
+                      <div class="legend-item"><span class="legend-dot dot-head"></span> Current Head</div>
+                      <div class="legend-item"><span class="legend-dot dot-init"></span> Initial Position</div>
+                      <div class="legend-item"><span class="legend-dot dot-pending"></span> Pending Request</div>
+                      <div class="legend-item"><span class="legend-dot dot-completed"></span> Completed Request</div>
+                      <div class="legend-item"><span class="legend-dot dot-boundary"></span> Boundary Turnaround</div>
+                    </div>
+
+                    <div class="ruler-wrapper">
+                      <!-- TRACK RULER LABELS TOP -->
+                      <div class="ruler-labels" id="rulerLabels">
+                        <span>0</span>
+                        <span>50</span>
+                        <span>100</span>
+                        <span>150</span>
+                        <span>199</span>
+                      </div>
+
+                      <!-- PHYSICAL TRACK RAIL -->
+                      <div class="track-rail" id="trackRail">
+                        <!-- Head carriage pointer -->
+                        <div class="head-carriage" id="headCarriage" style="left: 26.5%;">
+                          <div class="carriage-pointer">
+                            <span class="carriage-label" id="carriageLabel">53</span>
+                            <div class="carriage-arrow"></div>
+                          </div>
+                          <div class="carriage-glow"></div>
+                        </div>
+
+                        <!-- Initial head pin -->
+                        <div class="initial-head-pin" id="initialHeadPin" style="left: 26.5%;" title="Initial Position: Track 53">
+                          <div class="pin-marker"></div>
+                          <span class="pin-text">Init (53)</span>
+                        </div>
+
+                        <!-- Dynamic Request Markers container -->
+                        <div class="request-markers-layer" id="requestMarkersLayer"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 2D SEEK TRAJECTORY GRAPH (TEXTBOOK DIAGRAM) -->
+                  <div class="seek-trajectory-section">
+                    <div class="trajectory-header">
+                      <div class="traj-title-group">
+                        <h4 class="traj-title">2D Cylinder Seek Trajectory (Time &times; Track)</h4>
+                        <span class="traj-subtitle">Standard OS textbook diagram mapping head movements along time steps</span>
+                      </div>
+                      <span class="badge badge-neutral" id="trajAlgoBadge">SCAN</span>
+                    </div>
+                    <div class="trajectory-canvas-wrap">
+                      <canvas id="seekTrajectoryCanvas"></canvas>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- LIVE EXECUTION TRACE TABLE -->
+              <div class="card trace-card">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <h3 class="card-title">Live Execution Trace</h3>
+                    <span class="card-subtitle">Real-time table of head transitions, track distances, and request completion states</span>
+                  </div>
+                  <div class="trace-actions">
+                    <span class="trace-status-summary" id="traceSummaryText">0 of 8 completed</span>
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="data-table" id="executionTraceTable">
+                      <thead>
+                        <tr>
+                          <th style="width: 60px;">Step</th>
+                          <th>Previous Track</th>
+                          <th>Serviced Track</th>
+                          <th>Direction</th>
+                          <th>Seek Distance</th>
+                          <th>Cumulative</th>
+                          <th>Originating App</th>
+                          <th>Status</th>
+                          <th>Explanation</th>
+                        </tr>
+                      </thead>
+                      <tbody id="traceTableBody">
+                        <!-- Populated dynamically -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 3: ALGORITHM COMPARISON                   -->
+        <!-- ============================================== -->
+        <section class="view-section" id="view-comparison">
+          <!-- COMPARISON HEADER BANNER -->
+          <div class="card comparison-banner">
+            <div class="banner-content">
+              <div>
+                <h3 class="banner-title">Multi-Algorithm Benchmark Suite</h3>
+                <p class="banner-desc">Evaluating all six disk scheduling algorithms against the exact same workload and initial conditions.</p>
+              </div>
+              <div class="banner-workload-meta">
+                <span class="workload-chip"><strong>Head:</strong> <span id="compHeadVal">53</span></span>
+                <span class="workload-chip"><strong>Queue:</strong> <span id="compQueueVal">8 items</span></span>
+                <span class="workload-chip"><strong>Disk:</strong> <span id="compDiskVal">200 tracks</span></span>
+                <button class="btn btn-primary btn-sm" onclick="runComparisonBenchmark()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  Re-Benchmark All
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- COMPARISON DATA TABLE -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3 class="card-title">Comprehensive Algorithm Scorecard</h3>
+                <span class="card-subtitle">Sorted by physical head movement efficiency (least tracks traveled)</span>
+              </div>
+              <span class="badge badge-sage" id="bestPerformerBadge">Best: SSTF</span>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="data-table" id="comparisonTable">
+                  <thead>
+                    <tr>
+                      <th>Algorithm</th>
+                      <th>Total Head Movement</th>
+                      <th>Avg Seek Distance</th>
+                      <th>Estimated Seek Time</th>
+                      <th>Throughput</th>
+                      <th>Requests Completed</th>
+                      <th>Turnaround Stops</th>
+                      <th>Relative Efficiency</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="comparisonTableBody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 COMPARISON CHARTS IN 2x2 GRID -->
+          <div class="grid-2col">
+            <!-- CHART 1: TOTAL HEAD MOVEMENT -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h4 class="card-title">Total Head Movement (Tracks)</h4>
+                  <span class="card-subtitle">Lower is better (&Sigma; absolute cylinder deltas)</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="compChartHeadMovement"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- CHART 2: AVERAGE SEEK DISTANCE -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h4 class="card-title">Average Seek Distance per Request</h4>
+                  <span class="card-subtitle">Mean tracks traversed per serviced I/O</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="compChartAvgSeek"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- CHART 3: ESTIMATED SEEK TIME -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h4 class="card-title">Estimated Seek Time (ms)</h4>
+                  <span class="card-subtitle">Based on configured mechanical seek rate</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="compChartSeekTime"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- CHART 4: THROUGHPUT -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h4 class="card-title">Throughput (Requests / Second)</h4>
+                  <span class="card-subtitle">Simulated rate of completed requests per unit time</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="compChartThroughput"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 4: WORKLOAD MANAGER                       -->
+        <!-- ============================================== -->
+        <section class="view-section" id="view-workload">
+          <div class="workload-intro-card card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3 class="card-title">Multi-Application I/O Workload Generator</h3>
+                <span class="card-subtitle">Simulate real OS environments where multiple concurrent processes generate competing I/O queues</span>
+              </div>
+              <div class="workload-mode-switch">
+                <span class="mode-label">Dispatch Mode:</span>
+                <div class="radio-pill-group">
+                  <label class="radio-pill">
+                    <input type="radio" name="dispatchMode" value="fair" checked>
+                    <span>FAIR MODE</span>
+                  </label>
+                  <label class="radio-pill">
+                    <input type="radio" name="dispatchMode" value="priority">
+                    <span>PRIORITY MODE</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="disclaimer-callout">
+                <div class="callout-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                </div>
+                <div class="callout-content">
+                  <strong>Architectural Distinction:</strong> Application request dispatching (Fair vs Priority) determines <em>which application requests enter the drive queue</em>. The disk scheduling algorithm (SCAN, SSTF, etc.) determines the <em>physical head order</em> among those pending requests.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- APPLICATIONS GRID -->
+          <div class="apps-grid-header">
+            <h4 class="section-heading">Configured Operating System Applications</h4>
+            <button class="btn btn-secondary btn-sm" id="addNewAppBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Add Custom Application
+            </button>
+          </div>
+
+          <div class="apps-grid" id="appsContainer">
+            <!-- App Cards will be generated via JavaScript -->
+          </div>
+
+          <!-- GENERATE & MERGE ACTIONS -->
+          <div class="card workload-merge-card">
+            <div class="card-body">
+              <div class="merge-summary">
+                <div>
+                  <h4 class="merge-title">Aggregate Workload Stream</h4>
+                  <p class="merge-desc" id="workloadMergedSummary">5 active applications configured. Ready to synthesize composite request queue.</p>
+                </div>
+                <div class="merge-buttons">
+                  <button class="btn btn-outline" id="regenerateWorkloadsBtn">Regenerate App Queues</button>
+                  <button class="btn btn-primary" id="loadWorkloadToSimulatorBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    Synthesize & Load into Simulator
+                  </button>
+                </div>
+              </div>
+              <div class="preview-queue-box">
+                <span class="preview-label">Generated Queue Preview:</span>
+                <div class="preview-tags" id="workloadMergedTags">
+                  <!-- Tags injected by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 5: PERFORMANCE ANALYTICS                  -->
+        <!-- ============================================== -->
+        <section class="view-section" id="view-analytics">
+          <!-- ANALYTICS TOP ROW -->
+          <div class="grid-2col">
+            <!-- DYNAMIC INSIGHTS ENGINE -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3 class="card-title">Automated Performance Insights</h3>
+                  <span class="card-subtitle">Real-time analytical conclusions computed from current benchmark runs</span>
+                </div>
+                <span class="badge badge-terracotta">Dynamic AI Analysis</span>
+              </div>
+              <div class="card-body">
+                <ul class="insights-list" id="analyticsInsightsList">
+                  <!-- Generated dynamically based on actual comparison numbers -->
+                </ul>
+              </div>
+            </div>
+
+            <!-- PERFORMANCE LEADERBOARD -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3 class="card-title">Algorithm Efficiency Leaderboard</h3>
+                  <span class="card-subtitle">Ranked by head movement optimization index</span>
+                </div>
+                <span class="badge badge-wine">OS Benchmark</span>
+              </div>
+              <div class="card-body">
+                <div class="leaderboard-list" id="analyticsLeaderboard">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DETAILED ANALYTICS CHARTS -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3 class="card-title">Seek Distance Distribution & Variance</h3>
+                <span class="card-subtitle">Head movement variance across scheduling strategies</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart-container-large">
+                <canvas id="analyticsRadarChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 6: ABOUT PROJECT                          -->
+        <!-- ============================================== -->
+        <section class="view-section" id="view-about">
+          <div class="card about-hero-card">
+            <div class="about-hero-content">
+              <div class="hero-badge">OPERATING SYSTEMS LABORATORY PROJECT</div>
+              <h2 class="about-title">DISKFLOW</h2>
+              <p class="about-subtitle">Interactive Disk Scheduling & I/O Performance Simulator</p>
+              <p class="about-lead">
+                An advanced educational simulation designed for computer science and operating systems students to visualize mechanical hard drive head positioning, dissect seek latency mathematical models, and evaluate algorithm trade-offs under diverse I/O workloads.
+              </p>
+            </div>
+          </div>
+
+          <!-- ABOUT CONTENT GRID -->
+          <div class="grid-2col">
+            <!-- PROBLEM STATEMENT & OBJECTIVE -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Problem Statement & Motivation</h3>
+              </div>
+              <div class="card-body prose">
+                <p>
+                  In traditional spinning magnetic storage drives (HDDs), mechanical seek time—the physical movement of the disk read/write head assembly across concentric tracks (cylinders)—constitutes the primary bottleneck in secondary storage I/O performance.
+                </p>
+                <p>
+                  Without intelligent scheduling, random first-come first-serve processing leads to severe <strong>arm thrashing</strong>, wherein the head continually swings across extreme ends of the platter, multiplying seek latency and sharply degrading system throughput.
+                </p>
+                <h4>Project Objectives</h4>
+                <ul>
+                  <li>Provide an intuitive, interactive visual laboratory to model physical disk head mechanics.</li>
+                  <li>Faithfully implement the 6 core OS disk scheduling algorithms (FCFS, SSTF, SCAN, C-SCAN, LOOK, C-LOOK) without mathematical approximations.</li>
+                  <li>Quantify performance through rigorous metrics: Total Head Movement, Average Seek Distance, Estimated Seek Time, and Throughput.</li>
+                  <li>Demonstrate multi-application OS workload multiplexing using Fair and Priority dispatching models.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- MATHEMATICAL FORMULAS -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Mathematical Formulations</h3>
+              </div>
+              <div class="card-body prose">
+                <div class="formula-box">
+                  <div class="formula-title">1. Total Head Movement (&Delta; tracks)</div>
+                  <div class="formula-math">Total Head Movement = &Sigma;<sub>i=1..N</sub> |Track<sub>i</sub> - Track<sub>i-1</sub>|</div>
+                  <p class="formula-desc">Sum of absolute displacements across all consecutive head cylinder transitions starting from initial head position.</p>
+                </div>
+
+                <div class="formula-box">
+                  <div class="formula-title">2. Average Seek Distance (tracks/request)</div>
+                  <div class="formula-math">Average Seek Distance = Total Head Movement / Total Serviced Requests</div>
+                  <p class="formula-desc">The expected seek travel required to service an individual I/O request.</p>
+                </div>
+
+                <div class="formula-box">
+                  <div class="formula-title">3. Estimated Seek Time (ms)</div>
+                  <div class="formula-math">Estimated Seek Time = Total Head Movement &times; Seek Time Per Track (ms)</div>
+                  <p class="formula-desc">First-order linear model calculating cumulative mechanical arm transition delay.</p>
+                </div>
+
+                <div class="formula-box">
+                  <div class="formula-title">4. Simulated Throughput (requests/sec)</div>
+                  <div class="formula-math">Throughput = Requests Serviced / (Total Seek Time + Rotational Overhead)</div>
+                  <p class="formula-desc">Educational estimate modeling completed I/O operations per simulated unit of real time.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ALGORITHM COMPARISON DEEP-DIVE TABLE -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">In-Depth Algorithm Architectural Comparison</h3>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Algorithm</th>
+                      <th>Core Strategy</th>
+                      <th>Primary Advantage</th>
+                      <th>Major Drawback</th>
+                      <th>Boundary Behavior</th>
+                      <th>Starvation Risk</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>FCFS</strong></td>
+                      <td>FIFO chronological order</td>
+                      <td>Zero algorithmic overhead; perfectly fair</td>
+                      <td>High seek distance; arm thrashing</td>
+                      <td>Does not seek boundaries</td>
+                      <td>None</td>
+                    </tr>
+                    <tr>
+                      <td><strong>SSTF</strong></td>
+                      <td>Greedy closest cylinder</td>
+                      <td>Significantly minimizes seek movement</td>
+                      <td>Starvation for peripheral track requests</td>
+                      <td>Does not seek boundaries</td>
+                      <td>High (peripheral tracks)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>SCAN</strong></td>
+                      <td>Bi-directional elevator sweep</td>
+                      <td>Eliminates starvation; smooth travel</td>
+                      <td>Unequal waiting time; sweeps empty tracks to 0 or Max</td>
+                      <td>Must touch disk boundary (0 or Max)</td>
+                      <td>None</td>
+                    </tr>
+                    <tr>
+                      <td><strong>C-SCAN</strong></td>
+                      <td>Uni-directional circular sweep</td>
+                      <td>Uniform waiting time distribution across platter</td>
+                      <td>High return seek overhead across entire disk</td>
+                      <td>Touches both boundaries (0 and Max)</td>
+                      <td>None</td>
+                    </tr>
+                    <tr>
+                      <td><strong>LOOK</strong></td>
+                      <td>Directional sweep with lookahead</td>
+                      <td>Eliminates pointless boundary visits of SCAN</td>
+                      <td>Requests at opposing ends experience latency</td>
+                      <td>Reverses at furthest pending cylinder</td>
+                      <td>None</td>
+                    </tr>
+                    <tr>
+                      <td><strong>C-LOOK</strong></td>
+                      <td>Circular sweep with lookahead</td>
+                      <td>Eliminates redundant boundary seeks of C-SCAN</td>
+                      <td>Arm return jump still incurs seek cost</td>
+                      <td>Wraps directly between lowest & highest requests</td>
+                      <td>None</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- KEY LEARNING OUTCOMES & TECH SPEC -->
+          <div class="grid-2col">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Key Learning Outcomes</h3>
+              </div>
+              <div class="card-body prose">
+                <ul>
+                  <li><strong>Mechanical Trade-offs:</strong> Understand why greedy optimization (SSTF) maximizes local throughput but introduces fairness and starvation anomalies.</li>
+                  <li><strong>Elevator Mechanics:</strong> Grasp why directional sweeps (SCAN/LOOK) bounded seek variance and prevented arm whip in early mainframe storage subsystems.</li>
+                  <li><strong>Circular Uniformity:</strong> Recognize how C-SCAN and C-LOOK ensure deterministic response times for both interior and exterior cylinder tracks.</li>
+                  <li><strong>Software Separation:</strong> Distinguish operating system process-level dispatch priority from hardware device driver disk scheduling.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">System Technical Architecture</h3>
+              </div>
+              <div class="card-body prose">
+                <ul>
+                  <li><strong>Core Technologies:</strong> HTML5 Semantic Markup, CSS3 Variables & Flex/Grid, Vanilla JavaScript (ES2022+), Chart.js (v4.4.2).</li>
+                  <li><strong>Design System:</strong> Elegant Burgundy & Ivory theme (#722F37, #F6F1E7, #C78D75, #78866B).</li>
+                  <li><strong>Zero Dependencies:</strong> No heavy web frameworks, runs purely in-browser locally without backend servers or databases.</li>
+                  <li><strong>Deterministic Engine:</strong> Pure mathematical models ensuring 100% reproducible results for academic evaluations and viva demonstrations.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD APPLICATION -->
+  <div class="modal-overlay hidden" id="addAppModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add Custom Application</h3>
+        <button class="modal-close-btn" id="closeAddAppModalBtn">&times;</button>
+      </div>
+      <div class="modal-body form-compact">
+        <div class="form-group">
+          <label for="newAppName" class="form-label">Application Name</label>
+          <input type="text" id="newAppName" class="form-input" placeholder="e.g. Compiler / Web Server" value="Compiler Daemon">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="newAppColor" class="form-label">Theme Color</label>
+            <input type="color" id="newAppColor" class="form-input color-picker" value="#9B4A52">
+          </div>
+          <div class="form-group">
+            <label for="newAppPriority" class="form-label">Dispatch Priority (1-5)</label>
+            <select id="newAppPriority" class="form-select">
+              <option value="1">1 (Lowest)</option>
+              <option value="2">2 (Low)</option>
+              <option value="3" selected>3 (Normal)</option>
+              <option value="4">4 (High)</option>
+              <option value="5">5 (Critical / Realtime)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="newAppReqCount" class="form-label">Initial Request Count</label>
+          <input type="number" id="newAppReqCount" class="form-input" min="1" max="15" value="4">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelAddAppBtn">Cancel</button>
+        <button class="btn btn-primary" id="confirmAddAppBtn">Add Application</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Modular JavaScript Architecture -->
+  <script src="js/state.js"></script>
+  <script src="js/algorithms.js"></script>
+  <script src="js/visualizer.js"></script>
+  <script src="js/trace.js"></script>
+  <script src="js/workload.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

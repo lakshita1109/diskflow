@@ -1,0 +1,24 @@
+{
+  "name": "diskflow",
+  "version": "1.0.0",
+  "description": "DISKFLOW — Interactive Disk Scheduling & I/O Performance Simulator",
+  "main": "script.js",
+  "scripts": {
+    "start": "npx serve -l 3000 .",
+    "serve": "npx serve -l 3000 .",
+    "py": "python -m http.server 3000",
+    "open": "powershell -Command \"Start-Process index.html\""
+  },
+  "keywords": [
+    "disk-scheduling",
+    "operating-systems",
+    "fcfs",
+    "sstf",
+    "scan",
+    "c-scan",
+    "look",
+    "c-look"
+  ],
+  "author": "",
+  "license": "MIT"
+}

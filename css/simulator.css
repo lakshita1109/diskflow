@@ -1,0 +1,457 @@
+/* ==========================================================================
+   DISKFLOW — DISK SIMULATOR & VISUALIZER STYLES
+   ========================================================================== */
+
+.simulator-layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 20px;
+}
+
+.sim-sidebar-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sim-main-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* EDUCATIONAL REASONING BOX */
+.edu-reasoning-card {
+  border-color: rgba(200, 111, 84, 0.4);
+  background: linear-gradient(180deg, #FFFFFF 0%, #FCF8F5 100%);
+}
+
+.edu-step-header {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--accent-terracotta);
+  margin-bottom: 6px;
+}
+
+.edu-step-explanation {
+  font-size: 0.82rem;
+  color: var(--text-espresso);
+  line-height: 1.45;
+  margin-bottom: 12px;
+}
+
+.edu-partitions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  border-top: 1px dashed var(--border-soft-beige);
+  padding-top: 10px;
+}
+
+.edu-partition-col {
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-soft-beige);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+}
+
+.partition-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.partition-tags {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-espresso);
+  min-height: 20px;
+  word-break: break-all;
+}
+
+/* SPEED CONTROLS */
+.sim-speed-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.speed-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.speed-btn-group {
+  display: flex;
+  background-color: var(--bg-ivory-subtle);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+}
+
+.speed-btn {
+  background: none;
+  border: none;
+  padding: 3px 8px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all var(--transition-fast);
+}
+
+.speed-btn.active {
+  background-color: var(--card-warm-white);
+  color: var(--burgundy-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* PLAYBACK BAR */
+.playback-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--bg-ivory);
+  border: 1px solid var(--border-soft-beige);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  margin-bottom: 24px;
+}
+
+.playback-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ctrl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background-color: var(--card-warm-white);
+  border: 1px solid var(--border-soft-beige);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-espresso);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ctrl-btn:hover {
+  background-color: var(--bg-ivory-subtle);
+  border-color: var(--burgundy-primary);
+  color: var(--burgundy-primary);
+}
+
+.ctrl-btn-primary {
+  background-color: var(--burgundy-primary);
+  border-color: var(--burgundy-primary);
+  color: #FFFDF8;
+}
+
+.ctrl-btn-primary:hover {
+  background-color: var(--burgundy-dark);
+  color: #FFFDF8;
+}
+
+.sim-indicators {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.indicator-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+}
+
+.ind-label {
+  color: var(--text-muted);
+}
+
+/* 1D HORIZONTAL TRACK RULER & MECHANICAL CARRIAGE */
+.disk-track-container {
+  background-color: #FAF7F1;
+  border: 1px solid var(--border-soft-beige);
+  border-radius: var(--radius-md);
+  padding: 24px 20px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.disk-track-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot-head { background-color: var(--accent-terracotta); box-shadow: 0 0 6px var(--accent-terracotta); }
+.dot-init { background-color: var(--burgundy-dark); border: 2px solid #FFFDF8; }
+.dot-pending { background-color: var(--burgundy-primary); }
+.dot-completed { background-color: var(--sage-completed); }
+.dot-boundary { background-color: var(--muted-maroon); }
+
+.ruler-wrapper {
+  position: relative;
+  padding: 0 16px;
+}
+
+.ruler-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.track-rail {
+  height: 28px;
+  background: linear-gradient(180deg, #E2D7C7 0%, #D5C8B5 100%);
+  border-radius: 14px;
+  border: 1px solid #C4B59F;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.12);
+}
+
+/* HEAD CARRIAGE */
+.head-carriage {
+  position: absolute;
+  top: -38px;
+  transform: translateX(-50%);
+  z-index: 25;
+  transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  pointer-events: none;
+}
+
+.carriage-pointer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.carriage-label {
+  background-color: var(--accent-terracotta);
+  color: #FFFDF8;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px var(--terracotta-glow);
+  white-space: nowrap;
+}
+
+.carriage-arrow {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid var(--accent-terracotta);
+}
+
+.carriage-glow {
+  width: 16px;
+  height: 48px;
+  background: radial-gradient(circle, var(--accent-terracotta) 0%, transparent 70%);
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.6;
+}
+
+/* INITIAL HEAD PIN */
+.initial-head-pin {
+  position: absolute;
+  bottom: -28px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.pin-marker {
+  width: 8px;
+  height: 8px;
+  background-color: var(--burgundy-dark);
+  border-radius: 50%;
+  border: 2px solid #FFFDF8;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.pin-text {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--burgundy-dark);
+  font-weight: 700;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+/* REQUEST MARKERS ON RAIL */
+.request-markers-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.track-marker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #FFFDF8;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  transition: all var(--transition-normal);
+  z-index: 15;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.track-marker.marker-pending {
+  background-color: var(--burgundy-primary);
+}
+
+.track-marker.marker-completed {
+  background-color: var(--sage-completed);
+  box-shadow: 0 0 8px var(--sage-glow);
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.track-marker.marker-boundary {
+  background-color: var(--muted-maroon);
+  border-radius: 3px;
+}
+
+.marker-tooltip {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--text-espresso);
+  color: #FFFDF8;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
+}
+
+.track-marker:hover .marker-tooltip {
+  opacity: 1;
+}
+
+/* 2D SEEK TRAJECTORY GRAPH */
+.seek-trajectory-section {
+  border-top: 1px solid var(--border-soft-beige);
+  padding-top: 16px;
+}
+
+.trajectory-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.traj-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-espresso);
+}
+
+.traj-subtitle {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.trajectory-canvas-wrap {
+  background-color: #FAF7F1;
+  border: 1px solid var(--border-soft-beige);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  height: 180px;
+  position: relative;
+}
+
+#seekTrajectoryCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* EXECUTION TRACE TABLE CONTAINER */
+.trace-card {
+  margin-top: 4px;
+}
+
+.trace-status-summary {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.trace-card .table-responsive {
+  max-height: 270px;
+  overflow-y: auto;
+  overflow-x: auto;
+  position: relative;
+}
+
+.trace-card .data-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background-color: var(--bg-ivory);
+  box-shadow: 0 1px 0 var(--border-soft-beige);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .simulator-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .playback-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .sim-indicators {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
