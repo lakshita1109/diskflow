@@ -1,6 +1,37 @@
 # DISKFLOW — Disk Scheduling & I/O Performance Simulator
 
-A fully interactive simulator for classic disk scheduling algorithms built with pure HTML, CSS, and JavaScript. No backend. No build step. Just open `index.html`.
+---
+
+## What is DISKFLOW?
+
+DISKFLOW is an educational web-based simulator designed to help students, developers, and OS enthusiasts **understand and visualize how a computer's disk scheduling system works** — the same mechanism that determines in what order your hard drive serves read/write requests.
+
+Modern operating systems use disk scheduling algorithms to decide the order in which I/O requests from multiple processes are served. A poor scheduling strategy results in excessive head movement, high seek time, and degraded system performance. DISKFLOW makes this abstract concept tangible by animating the disk head in real time and measuring exactly how far it travels under each algorithm.
+
+### What problem does it solve?
+
+When multiple programs need to read or write data at the same time, the OS must queue those requests and serve them efficiently. The order it chooses dramatically affects performance:
+
+- **Bad scheduling** can cause the disk head to jump back and forth wildly, wasting time
+- **Good scheduling** minimizes total head movement, reducing seek time and improving throughput
+
+DISKFLOW lets you load any set of cylinder requests, choose from 6 real-world algorithms, and immediately see — with animation and hard numbers — which strategy wins and why.
+
+### Who is it for?
+
+- **Students** studying Operating Systems who want to go beyond textbook diagrams
+- **Educators** who want a live demo tool for class
+- **Developers** curious about low-level I/O performance concepts
+- **Anyone** preparing for OS interviews or exams (GATE, university papers, etc.)
+
+### What can you do with it?
+
+- Simulate FCFS, SSTF, SCAN, C-SCAN, LOOK, and C-LOOK on any custom queue
+- Watch the disk head animate across a 1D platter rail in real time
+- Compare all 6 algorithms side-by-side in one chart
+- Run multi-process workloads with Fair or Priority I/O scheduling
+- Benchmark algorithms and see which performs best on your data
+- Read a step-by-step trace table showing every head movement
 
 ---
 
